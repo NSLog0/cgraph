@@ -42,7 +42,7 @@ dist/                     — pre-compiled JS (committed, no build step on insta
 - **Two-pass parsing**: extract raw import strings first → resolve against full file index after all files parsed (needed because imports reference files not yet seen)
 - **Alias resolution**: reads `tsconfig.json compilerOptions.paths`, aliased paths treated as project-root-relative (NOT joined with source file dirname)
 - **Call graph**: best-effort name matching cross-file only, deduped — avoids noise from same-file calls
-- **3D graph filter**: calls `graph3d.graphData(filtered)` — simulation restarts on filter change; highlight via closure re-eval pattern (`graph3d.nodeColor(graph3d.nodeColor())`)
+- **3D graph filter**: calls `graph3d.graphData(filtered)` — simulation restarts on filter change; highlight via closure re-eval pattern (`graph3d.nodeColor(graph3d.nodeColor())`); `contains` edges always hidden (too noisy)
 - **MCP per-connection server**: each SSE connection gets its own `McpServer` instance — shared instance crashes on second connect
 - **WASM parser**: uses `web-tree-sitter@0.22.6` + `tree-sitter-wasms` — no native compilation, WASM files loaded from `tree-sitter-wasms/out/*.wasm` via `Parser.Language.load()`
 - **TSX grammar**: `.tsx` → `tree-sitter-tsx.wasm`, `.ts` → `tree-sitter-typescript.wasm` — separate WASM files
@@ -88,7 +88,7 @@ dist/                     — pre-compiled JS (committed, no build step on insta
 - `3d-force-graph` (Three.js WebGL) — 3D force-directed, mouse rotate/zoom/pan
 - Particle animation on `calls` edges (3 particles, speed 0.005)
 - Click node → highlight neighbors, show floating glass detail panel (DOM-built, no innerHTML with data)
-- Filter rebuilds graph data: 1000 nodes max, 2000 semantic edges + 1000 contains edges (semantic first)
+- Filter rebuilds graph data: 1000 nodes max, 2000 semantic edges (`contains` always excluded)
 - `onEngineStop` → auto `zoomToFit(600)` after simulation stabilizes
 - Panel + legend use `position: absolute` floating over graph (not flex siblings) — avoids canvas overlap issue
 - `#overlay` is a sibling of `#graph-container` inside `#main`, NOT a child — ForceGraph3D clears its container on init

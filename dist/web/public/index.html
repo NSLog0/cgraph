@@ -233,9 +233,12 @@
       overflow-y: auto;
       padding: 16px;
     }
-    #panel-body::-webkit-scrollbar { width: 4px; }
-    #panel-body::-webkit-scrollbar-track { background: transparent; }
-    #panel-body::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+    #panel-body::-webkit-scrollbar,
+    #panel-hotspots::-webkit-scrollbar { width: 4px; }
+    #panel-body::-webkit-scrollbar-track,
+    #panel-hotspots::-webkit-scrollbar-track { background: transparent; }
+    #panel-body::-webkit-scrollbar-thumb,
+    #panel-hotspots::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
 
     .prow { margin-bottom: 14px; }
     .prow-label {
@@ -301,14 +304,28 @@
     }
     .edge-item:hover { background: var(--border); }
     .edge-name {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
       overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    }
+    .edge-name-sym {
       font-family: 'Fira Code', monospace;
       font-size: 11px;
       color: var(--text-2);
-      flex: 1;
-      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .edge-name-path {
+      font-family: 'Fira Code', monospace;
+      font-size: 9px;
+      color: var(--text-3);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .edge-tag {
       font-size: 9px;
@@ -386,6 +403,123 @@
     .leg-dot  { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
     .leg-line { width: 16px; height: 2px; flex-shrink: 0; border-radius: 1px; }
 
+    /* ── PANEL TABS ──────────────────────────────── */
+    .panel-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .panel-tab {
+      flex: 1;
+      padding: 10px 0;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-3);
+      cursor: pointer;
+      text-align: center;
+      border: none;
+      background: transparent;
+      transition: color 0.15s, border-bottom 0.15s;
+      border-bottom: 2px solid transparent;
+    }
+    .panel-tab:hover { color: var(--text-2); }
+    .panel-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── HOTSPOTS ─────────────────────────────────── */
+    .hotspot-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      margin-top: 4px;
+      font-family: 'Fira Code', monospace;
+    }
+    .hotspot-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 9px;
+      border-radius: 6px;
+      background: var(--surface-2);
+      margin-bottom: 3px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .hotspot-item:hover { background: var(--border); }
+    .hotspot-rank {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-3);
+      font-family: 'Fira Code', monospace;
+      width: 16px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .hotspot-info { flex: 1; min-width: 0; overflow: hidden; }
+    .hotspot-name {
+      font-size: 11px;
+      font-family: 'Fira Code', monospace;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hotspot-path {
+      font-size: 9px;
+      font-family: 'Fira Code', monospace;
+      color: var(--text-3);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hotspot-count {
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .hotspot-divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+    /* ── FOCUS BADGE ──────────────────────────────── */
+    #focus-badge {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 60;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      background: rgba(251,191,36,0.12);
+      border: 1px solid rgba(251,191,36,0.35);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      color: #FBBF24;
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    #focus-badge.visible { display: flex; }
+    #focus-badge-esc {
+      cursor: pointer;
+      font-size: 10px;
+      color: rgba(251,191,36,0.6);
+      border: 1px solid rgba(251,191,36,0.25);
+      padding: 2px 7px;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+    #focus-badge-esc:hover { color: #FBBF24; }
+
     /* ── OVERLAY ──────────────────────────────────── */
     #overlay {
       position: absolute;
@@ -423,7 +557,7 @@
 <body>
 
 <div id="header">
-  <div id="logo">c<em>·</em>nexus</div>
+  <div id="logo">c<em>·</em>graph</div>
   <div class="hsep"></div>
   <div id="pProject">—</div>
   <div class="hsep"></div>
@@ -451,17 +585,12 @@
     <span class="search-icon">⌕</span>
     <input type="text" id="search" placeholder="search symbols or files…" />
   </div>
-  <select id="viewMode">
-    <option value="files">Files only</option>
-    <option value="all">All nodes</option>
-    <option value="functions">Functions only</option>
-  </select>
   <select id="langFilter"><option value="all">All languages</option></select>
   <button class="btn" onclick="applyFilter()">Filter</button>
   <div class="tsep"></div>
   <button class="btn-ghost" onclick="resetCamera()">fit view</button>
   <button class="btn-ghost" onclick="rerunLayout()">reheat</button>
-  <button class="btn-ghost" id="btnEdges" onclick="toggleContains()">show contains</button>
+  <button class="btn-ghost" id="btnFocus" onclick="toggleFocusMode()" style="display:none;border-color:rgba(251,191,36,0.4);color:#FBBF24;">focus [F]</button>
 </div>
 
 <div id="main">
@@ -473,15 +602,28 @@
 
   <div id="panel">
     <div id="panel-header">
-      <span id="panel-header-title">Node Details</span>
+      <span id="panel-header-title">Inspector</span>
+    </div>
+    <div class="panel-tabs">
+      <button class="panel-tab active" onclick="switchTab('details')" id="tab-details">Details</button>
+      <button class="panel-tab" onclick="switchTab('hotspots')" id="tab-hotspots">Hotspots</button>
     </div>
     <div id="panel-body"></div>
+    <div id="panel-hotspots" style="display:none;flex:1;overflow-y:auto;padding:16px;">
+    </div>
+  </div>
+
+  <div id="focus-badge">
+    <span>🎯</span>
+    <span id="focus-badge-name"></span>
+    <span id="focus-badge-esc" onclick="exitFocusMode()">esc</span>
   </div>
 
   <div id="legend">
     <span class="leg-cat">nodes</span>
     <div class="leg-group">
       <span class="leg"><span class="leg-dot" style="background:#60A5FA"></span>file</span>
+      <span class="leg"><span class="leg-dot" style="background:#FBBF24;box-shadow:0 0 6px #FBBF24"></span>entry</span>
       <span class="leg"><span class="leg-dot" style="background:#34D399"></span>function</span>
       <span class="leg"><span class="leg-dot" style="background:#A78BFA"></span>class</span>
       <span class="leg"><span class="leg-dot" style="background:#FB923C"></span>method</span>
@@ -491,7 +633,6 @@
       <span class="leg"><span class="leg-line" style="background:#60A5FA"></span>imports</span>
       <span class="leg"><span class="leg-line" style="background:#34D399"></span>calls ✦</span>
       <span class="leg"><span class="leg-line" style="background:#A78BFA"></span>extends</span>
-      <span class="leg"><span class="leg-line" style="background:#374151"></span>contains</span>
     </div>
   </div>
 </div>
@@ -503,6 +644,7 @@ const NODE_COLOR = {
   file: '#60A5FA', function: '#34D399', arrow_function: '#34D399',
   class: '#A78BFA', method: '#FB923C',
 };
+const ENTRY_COLOR = '#FBBF24';
 const NODE_VAL = { file: 10, class: 7, function: 3, arrow_function: 3, method: 2 };
 const LINK_COLOR = {
   imports: '#3B82F6', calls: '#10B981', extends: '#8B5CF6',
@@ -511,11 +653,13 @@ const LINK_COLOR = {
 
 let fullGraph = null;
 let graph3d = null;
-let filterState = { keyword: '', view: 'files', lang: 'all' };
-let showContains = false;
+let filterState = { keyword: '', lang: 'all' };
 let selectedNodeId = null;
 let highlightNodes = new Set();
 let highlightLinks = new Set();
+let entryNodeIds = new Set();
+let focusNodeId = null;
+let currentTab = 'details';
 
 // ── safe DOM helpers ──────────────────────────────────────────────────────────
 
@@ -527,6 +671,7 @@ function el(tag, cls, text) {
 }
 
 function clearPanel() {
+  if (currentTab !== 'details') return;
   const body = document.getElementById('panel-body');
   body.textContent = '';
   const wrap = el('div', 'empty-state');
@@ -534,6 +679,24 @@ function clearPanel() {
   wrap.appendChild(el('div', 'empty-title', 'No node selected'));
   wrap.appendChild(el('div', 'empty-text', 'Click any node\nin the graph'));
   body.appendChild(wrap);
+}
+
+// ── entry points ──────────────────────────────────────────────────────────────
+
+function computeEntryPoints() {
+  const hasIncoming = new Set(
+    fullGraph.edges
+      .filter(e => e.type === 'imports' || e.type === 'calls')
+      .map(e => e.target)
+  );
+  fullGraph.nodes.forEach(n => {
+    if (n.type === 'file' && !hasIncoming.has(n.id)) entryNodeIds.add(n.id);
+  });
+}
+
+function nodeBaseColor(n) {
+  if (n.type === 'file' && entryNodeIds.has(n.id)) return ENTRY_COLOR;
+  return NODE_COLOR[n.type] || '#718096';
 }
 
 // ── load ──────────────────────────────────────────────────────────────────────
@@ -556,8 +719,10 @@ async function loadGraph() {
     sel.appendChild(o);
   });
 
+  computeEntryPoints();
   initGraph3D();
   applyFilter();
+  buildHotspotsPanel();
 }
 
 // ── 3D graph ──────────────────────────────────────────────────────────────────
@@ -568,13 +733,17 @@ function initGraph3D() {
   graph3d = ForceGraph3D()(container)
     .backgroundColor('#0C0E14')
     .showNavInfo(false)
-    .nodeLabel(n => n.name + '\n' + n.filePath)
+    .nodeLabel(n => {
+      const label = n.name + (n.filePath !== n.name ? '\n' + n.filePath : '');
+      return entryNodeIds.has(n.id) ? '★ entry point\n' + label : label;
+    })
     .nodeColor(n => {
-      if (highlightNodes.size === 0) return NODE_COLOR[n.type] || '#718096';
-      return highlightNodes.has(n.id) ? (NODE_COLOR[n.type] || '#718096') : '#1A1E2A';
+      const base = nodeBaseColor(n);
+      if (highlightNodes.size === 0) return base;
+      return highlightNodes.has(n.id) ? base : '#1A1E2A';
     })
     .nodeVal(n => {
-      const base = NODE_VAL[n.type] || 2;
+      const base = (NODE_VAL[n.type] || 2) * (entryNodeIds.has(n.id) ? 1.8 : 1);
       return (highlightNodes.size > 0 && highlightNodes.has(n.id)) ? base * 1.6 : base;
     })
     .nodeOpacity(0.92)
@@ -587,6 +756,11 @@ function initGraph3D() {
       return l.type === 'contains' ? 0.2 : 0.5;
     })
     .linkOpacity(0.7)
+    .d3AlphaDecay(0.05)
+    .cooldownTicks(200)
+    .linkDirectionalArrowLength(l => l.type === 'contains' ? 0 : 4)
+    .linkDirectionalArrowRelPos(1)
+    .linkDirectionalArrowColor(l => LINK_COLOR[l.type] || '#718096')
     .linkDirectionalParticles(l => l.type === 'calls' ? 3 : 0)
     .linkDirectionalParticleWidth(1.2)
     .linkDirectionalParticleSpeed(0.005)
@@ -601,10 +775,12 @@ function initGraph3D() {
         highlightNodes.clear();
         highlightLinks.clear();
         clearPanel();
+        document.getElementById('btnFocus').style.display = 'none';
       } else {
         selectedNodeId = node.id;
         updateHighlight(node);
         showNodeDetail(node);
+        document.getElementById('btnFocus').style.display = '';
       }
       refreshColors();
     })
@@ -613,6 +789,7 @@ function initGraph3D() {
       highlightNodes.clear();
       highlightLinks.clear();
       clearPanel();
+      document.getElementById('btnFocus').style.display = 'none';
       refreshColors();
     });
 }
@@ -640,48 +817,160 @@ function updateHighlight(node) {
   });
 }
 
+// ── focus mode ────────────────────────────────────────────────────────────────
+
+function getNeighborhood(nodeId, hops) {
+  const visited = new Set([nodeId]);
+  let frontier = [nodeId];
+  for (let i = 0; i < hops; i++) {
+    const next = [];
+    fullGraph.edges.forEach(e => {
+      if (e.type === 'contains') return;
+      const src = e.source, tgt = e.target;
+      if (frontier.includes(src) && !visited.has(tgt)) { visited.add(tgt); next.push(tgt); }
+      if (frontier.includes(tgt) && !visited.has(src)) { visited.add(src); next.push(src); }
+    });
+    frontier = next;
+    if (!next.length) break;
+  }
+  return visited;
+}
+
+function enterFocusMode(nodeId) {
+  focusNodeId = nodeId;
+  const node = fullGraph.nodes.find(n => n.id === nodeId);
+  const badge = document.getElementById('focus-badge');
+  document.getElementById('focus-badge-name').textContent = node ? node.name : nodeId;
+  badge.classList.add('visible');
+  document.getElementById('btnFocus').textContent = 'exit focus';
+  document.getElementById('btnFocus').style.background = 'rgba(251,191,36,0.1)';
+  applyFilter();
+}
+
+function exitFocusMode() {
+  focusNodeId = null;
+  document.getElementById('focus-badge').classList.remove('visible');
+  document.getElementById('btnFocus').textContent = 'focus [F]';
+  document.getElementById('btnFocus').style.background = '';
+  applyFilter();
+}
+
+function toggleFocusMode() {
+  if (focusNodeId) { exitFocusMode(); return; }
+  if (selectedNodeId) enterFocusMode(selectedNodeId);
+}
+
 // ── filter ────────────────────────────────────────────────────────────────────
 
 function getFilteredData() {
-  const { keyword, view, lang } = filterState;
+  const { keyword, lang } = filterState;
+  const neighborhood = focusNodeId ? getNeighborhood(focusNodeId, 2) : null;
+
   const visibleNodes = fullGraph.nodes.slice(0, 1000).filter(n => {
+    if (neighborhood && !neighborhood.has(n.id)) return false;
     if (lang !== 'all' && n.language !== lang) return false;
-    if (view === 'files' && n.type !== 'file') return false;
-    if (view === 'functions' && n.type === 'file') return false;
     if (keyword && !n.name.toLowerCase().includes(keyword) && !n.filePath.toLowerCase().includes(keyword)) return false;
     return true;
   });
   const nodeIds = new Set(visibleNodes.map(n => n.id));
-  const semantic = fullGraph.edges.filter(e => e.type !== 'contains').slice(0, 2000).filter(e => nodeIds.has(e.source) && nodeIds.has(e.target));
-  const contains = showContains ? fullGraph.edges.filter(e => e.type === 'contains').slice(0, 1000).filter(e => nodeIds.has(e.source) && nodeIds.has(e.target)) : [];
+  const links = fullGraph.edges.filter(e => e.type !== 'contains').slice(0, 2000).filter(e => nodeIds.has(e.source) && nodeIds.has(e.target));
   return {
     nodes: visibleNodes.map(n => Object.assign({}, n)),
-    links: semantic.concat(contains).map(e => Object.assign({}, e)),
+    links: links.map(e => Object.assign({}, e)),
   };
 }
 
 function applyFilter() {
   filterState = {
     keyword: document.getElementById('search').value.toLowerCase(),
-    view: document.getElementById('viewMode').value,
     lang: document.getElementById('langFilter').value,
   };
   selectedNodeId = null;
   highlightNodes.clear();
   highlightLinks.clear();
-  clearPanel();
-  setOverlay(true, 'Simulating…');
+  if (currentTab === 'details') clearPanel();
+  document.getElementById('btnFocus').style.display = 'none';
+  setOverlay(true, focusNodeId ? 'Focusing…' : 'Simulating…');
   if (graph3d) graph3d.graphData(getFilteredData());
-}
-
-function toggleContains() {
-  showContains = !showContains;
-  document.getElementById('btnEdges').textContent = showContains ? 'hide contains' : 'show contains';
-  applyFilter();
 }
 
 function resetCamera() { if (graph3d) graph3d.zoomToFit(400, 40); }
 function rerunLayout()  { if (graph3d) { setOverlay(true, 'Reheating…'); graph3d.d3ReheatSimulation(); } }
+
+// ── panel tabs ────────────────────────────────────────────────────────────────
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-details').classList.toggle('active', tab === 'details');
+  document.getElementById('tab-hotspots').classList.toggle('active', tab === 'hotspots');
+  document.getElementById('panel-body').style.display = tab === 'details' ? '' : 'none';
+  document.getElementById('panel-hotspots').style.display = tab === 'hotspots' ? '' : 'none';
+}
+
+// ── hotspots panel ────────────────────────────────────────────────────────────
+
+function buildHotspotsPanel() {
+  const container = document.getElementById('panel-hotspots');
+  container.textContent = '';
+  container.style.cssText = 'flex:1;overflow-y:auto;padding:16px;';
+  container.style.setProperty('scrollbar-width', 'thin');
+
+  const importCount = new Map();
+  const callCount = new Map();
+  fullGraph.edges.forEach(e => {
+    if (e.type === 'imports') importCount.set(e.target, (importCount.get(e.target) || 0) + 1);
+    if (e.type === 'calls')   callCount.set(e.target,   (callCount.get(e.target)   || 0) + 1);
+  });
+
+  const nodeById = new Map(fullGraph.nodes.map(n => [n.id, n]));
+
+  const topImported = [...importCount.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([id, count]) => ({ node: nodeById.get(id), count }))
+    .filter(x => x.node);
+
+  const topCalled = [...callCount.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([id, count]) => ({ node: nodeById.get(id), count }))
+    .filter(x => x.node);
+
+  const maxImport = topImported[0]?.count || 1;
+  const maxCall   = topCalled[0]?.count || 1;
+
+  function renderSection(label, items, maxCount) {
+    container.appendChild(el('div', 'hotspot-section-label', label));
+    if (!items.length) {
+      const none = el('div', '', '—');
+      none.style.cssText = 'color:var(--text-3);font-size:12px;font-family:Fira Code,monospace;margin-bottom:12px';
+      container.appendChild(none);
+      return;
+    }
+    items.forEach(({ node, count }, i) => {
+      const item = el('div', 'hotspot-item');
+      item.appendChild(el('span', 'hotspot-rank', '#' + (i + 1)));
+      const info = el('div', 'hotspot-info');
+      info.appendChild(el('div', 'hotspot-name', node.name));
+      if (node.filePath && node.filePath !== node.name) {
+        info.appendChild(el('div', 'hotspot-path', node.filePath));
+      }
+      item.appendChild(info);
+      const countEl = el('span', 'hotspot-count', count);
+      item.appendChild(countEl);
+      item.addEventListener('click', () => {
+        switchTab('details');
+        const n = fullGraph.nodes.find(x => x.id === node.id);
+        if (n) { selectedNodeId = n.id; showNodeDetail(n); updateHighlight(n); refreshColors(); }
+      });
+      container.appendChild(item);
+    });
+  }
+
+  renderSection('Most Imported Files', topImported, maxImport);
+  container.appendChild(el('div', 'hotspot-divider'));
+  renderSection('Most Called Functions', topCalled, maxCall);
+}
 
 // ── panel (DOM-only, no innerHTML with data) ──────────────────────────────────
 
@@ -716,13 +1005,28 @@ function edgeListEl(edges, dir, nodeById) {
     const name = other ? other.name : (otherId.split('::')[1] || otherId);
     const item = el('div', 'edge-item');
     item.appendChild(el('span', 'edge-tag edge-tag-' + e.type, e.type));
-    item.appendChild(el('span', 'edge-name', name));
+    const nameWrap = el('span', 'edge-name');
+    nameWrap.appendChild(el('span', 'edge-name-sym', name));
+    if (other && other.filePath && other.filePath !== other.name) {
+      nameWrap.appendChild(el('span', 'edge-name-path', other.filePath));
+    }
+    item.appendChild(nameWrap);
+    item.style.cursor = 'pointer';
+    item.addEventListener('click', () => {
+      if (!other) return;
+      selectedNodeId = other.id;
+      showNodeDetail(other);
+      updateHighlight(other);
+      refreshColors();
+      document.getElementById('btnFocus').style.display = '';
+    });
     wrap.appendChild(item);
   });
   return wrap;
 }
 
 function showNodeDetail(node) {
+  switchTab('details');
   const outEdges = fullGraph.edges.filter(e => e.source === node.id && e.type !== 'contains');
   const inEdges  = fullGraph.edges.filter(e => e.target === node.id && e.type !== 'contains');
   const nodeById = new Map(fullGraph.nodes.map(n => [n.id, n]));
@@ -731,6 +1035,13 @@ function showNodeDetail(node) {
   body.textContent = '';
 
   body.appendChild(prow('type', badge(node.type)));
+
+  if (entryNodeIds.has(node.id)) {
+    const entryBadge = el('div', '');
+    entryBadge.style.cssText = 'display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:5px;font-size:10px;font-weight:700;font-family:Fira Code,monospace;background:rgba(251,191,36,0.12);color:#FBBF24;border:1px solid rgba(251,191,36,0.3);margin-bottom:14px';
+    entryBadge.textContent = '★ entry point';
+    body.appendChild(entryBadge);
+  }
 
   const nameVal = el('div', 'prow-val');
   nameVal.style.cssText = 'color:var(--text);font-size:15px;font-weight:700;font-family:Fira Code,monospace;word-break:break-all';
@@ -753,12 +1064,10 @@ function showNodeDetail(node) {
 
   body.appendChild(el('div', 'pdivider'));
 
-  const outLabel = el('div', 'edge-section-label', 'outgoing (' + outEdges.length + ')');
-  body.appendChild(outLabel);
+  body.appendChild(el('div', 'edge-section-label', 'outgoing (' + outEdges.length + ')'));
   body.appendChild(edgeListEl(outEdges, 'out', nodeById));
 
-  const inLabel = el('div', 'edge-section-label', 'incoming (' + inEdges.length + ')');
-  body.appendChild(inLabel);
+  body.appendChild(el('div', 'edge-section-label', 'incoming (' + inEdges.length + ')'));
   body.appendChild(edgeListEl(inEdges, 'in', nodeById));
 }
 
@@ -767,6 +1076,18 @@ function setOverlay(show, msg) {
   if (msg) document.getElementById('overlayMsg').textContent = msg;
   ov.classList.toggle('hidden', !show);
 }
+
+// ── keyboard shortcuts ────────────────────────────────────────────────────────
+
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'f' || e.key === 'F') {
+    if (selectedNodeId) toggleFocusMode();
+  }
+  if (e.key === 'Escape') {
+    if (focusNodeId) exitFocusMode();
+  }
+});
 
 document.getElementById('search').addEventListener('keydown', e => {
   if (e.key === 'Enter') applyFilter();

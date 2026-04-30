@@ -23,18 +23,75 @@ node --version
 
 ## Installation
 
+### Option 1 — install.sh (recommended, works everywhere)
+
+Works on macOS, Linux, and WSL2.
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/NSLog0/cgraph/master/install.sh | bash
 ```
 
-Verify it works:
-```bash
-cgraph --version
-```
+Installs to `~/.cgraph` and links the `cgraph` command globally.
 
-To update to the latest version:
+**Update:**
 ```bash
 git -C ~/.cgraph pull
+```
+
+**Uninstall:**
+```bash
+npm unlink -g cgraph && rm -rf ~/.cgraph
+```
+
+---
+
+### Option 2 — npm install from GitHub (macOS / Linux only)
+
+> ⚠️ Do not use this on WSL2 — npm has a TAR extraction bug with `.wasm` files on WSL2 that will break the install.
+
+```bash
+npm install -g github:NSLog0/cgraph
+```
+
+**Update:**
+```bash
+npm install -g github:NSLog0/cgraph
+```
+
+**Uninstall:**
+```bash
+npm uninstall -g cgraph
+```
+
+---
+
+### Option 3 — local development
+
+Use this if you've cloned the repo and want to work on cgraph itself.
+
+```bash
+git clone https://github.com/NSLog0/cgraph.git
+cd cgraph
+npm install
+npm install -g .
+```
+
+After making changes to `src/`, rebuild before testing:
+
+```bash
+npm run build
+```
+
+**Unlink:**
+```bash
+npm uninstall -g cgraph
+```
+
+---
+
+Verify any installation with:
+```bash
+cgraph --version
 ```
 
 ---
@@ -173,15 +230,7 @@ node --version
 
 ### Web UI shows no edges
 
-If the graph shows only dots with no connecting lines, the parser may not have extracted relationships for that language. This is most common with Java and Go projects. Try switching to **Files only** view in the toolbar — file-level import edges are more reliably detected.
-
----
-
-## Uninstall
-
-```bash
-npm unlink -g cgraph && rm -rf ~/.cgraph
-```
+If the graph shows only dots with no connecting lines, the parser may not have extracted relationships for that language. This is most common with Java and Go projects. File-level import edges are more reliably detected than function-level call edges for these languages.
 
 ---
 
@@ -189,10 +238,62 @@ npm unlink -g cgraph && rm -rf ~/.cgraph
 
 Open `http://localhost:8668` after running `cgraph serve`.
 
-- **Rotate** — left-click drag
-- **Zoom** — scroll wheel
-- **Pan** — right-click drag
-- **Inspect node** — click any node to open the detail panel (top-right)
-- **Filter** — use the toolbar to search by name, filter by type or language
+### Navigation
+
+| Action | How |
+|--------|-----|
+| Rotate | Left-click drag |
+| Zoom | Scroll wheel |
+| Pan | Right-click drag |
+| Inspect node | Click any node → detail panel opens on the right |
+| Deselect | Click the same node again, or click the background |
+
+### Node colors
+
+| Color | Meaning |
+|-------|---------|
+| 🔵 Blue | File |
+| 🟡 Gold (larger) | Entry point — a file nothing else imports, e.g. `page.tsx`, `route.ts` |
+| 🟢 Green | Function / arrow function |
+| 🟣 Purple | Class |
+| 🟠 Orange | Method |
+
+Entry points are a good place to start when exploring an unfamiliar codebase — they sit at the top of the dependency chain.
+
+### Toolbar
+
+- **Search** — filter nodes by name or file path, press Enter to apply
+- **All languages / language name** — filter to a single language
+- **Filter** — apply current search + language selection
 - **fit view** — re-center the camera
-- **reheat** — restart the force simulation if nodes drift apart
+- **reheat** — restart the force simulation
+
+### Focus Mode
+
+Zoom into one node's dependency neighborhood without the rest of the graph getting in the way.
+
+1. Click any node to select it
+2. Press **F** or click **focus [F]** in the toolbar
+3. The graph shrinks to show only nodes within 2 hops of that node
+4. Press **Esc** or click the yellow badge at the top to exit
+
+### Hotspots tab
+
+The right panel has two tabs: **Details** (selected node info) and **Hotspots**.
+
+Hotspots shows:
+- **Most Imported Files** — files imported by the most other files; usually shared utilities or config
+- **Most Called Functions** — functions called from the most places; critical shared logic
+
+Click any item in Hotspots to jump to that node's detail view.
+
+### Edge direction
+
+All edges have arrowheads. The arrow points **toward the dependency**:
+
+```
+route.ts ──imports──> prisma.ts
+```
+means `route.ts` depends on `prisma.ts`, not the other way around.
+
+Animated particles on green edges indicate `calls` relationships.
