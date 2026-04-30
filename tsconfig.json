@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@modelcontextprotocol/sdk/server/mcp": ["../node_modules/@modelcontextprotocol/sdk/dist/cjs/server/mcp.js"],
+      "@modelcontextprotocol/sdk/server/sse": ["../node_modules/@modelcontextprotocol/sdk/dist/cjs/server/sse.js"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
